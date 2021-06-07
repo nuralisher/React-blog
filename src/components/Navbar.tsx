@@ -22,9 +22,9 @@ export default function Navbar({}: Props): ReactElement {
             <div className={style.navbar_innner} >
                 <div className={style.left} >
                     <NavLink className={`${style.nav_item}`} 
-                        activeClassName={style.active_nav} exact to='/' >Main</NavLink>
+                        activeClassName={`${style.active_nav} ${style.active_nav_bg}`} exact to='/' >Main</NavLink>
                     <NavLink className={`${style.nav_item}`} 
-                        activeClassName={style.active_nav} to='/blogs' >Blogs</NavLink>
+                        activeClassName={`${style.active_nav} ${style.active_nav_bg}`} to='/blogs' >Blogs</NavLink>
                 </div>
                 <div className={style.right} >
                     {!isLogged ? 
@@ -37,7 +37,7 @@ export default function Navbar({}: Props): ReactElement {
                     :
                     <>
                         <NavLink to='/blogCreate' className={`${style.nav_item} ${style.writepost}`}
-                            activeClassName={style.active_nav} > Create Blog </NavLink>
+                            activeClassName={`${style.active_nav} ${style.active_nav_bg}`} > Create Blog </NavLink>
                         <div className={`${style.dropdown} ${style.nav_item}`}>
                             <div className={style.username} >
                                 {user.username.substr(0,10)} 

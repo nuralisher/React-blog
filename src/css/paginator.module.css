@@ -7,5 +7,11 @@
 
 .paginator>option{
     display: block;
-    margin: 0 .8em;
+    margin: 0 .5em;
 }
+
+.page{
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+

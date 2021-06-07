@@ -39,7 +39,7 @@ export default function Paginator({pageCount, currentPage, goToPage, portionSize
                 <option
                     onClick={(e)=>goToPage(e.currentTarget.value)}
                     value={p}
-                    className={`${style.page} ${nav.nav_item} ${p===currentPage && nav.active_nav}`} >
+                    className={`${style.page} ${nav.nav_item} ${p===currentPage && nav.active_nav && nav.active_nav_bg}`} >
                         {p}
                 </option>
             ))

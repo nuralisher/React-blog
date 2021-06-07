@@ -3,7 +3,7 @@
     position: fixed;
     top: 0;
     background-color: var(--main-color);
-    padding: 1.2em 8em;
+    padding: 1em 8em;
     color: var(--text-color);
     box-shadow: 0 0 .5em var(--main-color2);
     width: 100vw;
@@ -36,6 +36,7 @@
     position: relative;
     text-transform: uppercase;
     font-size: 17px;
+    padding: 5px 8px;
 }
 
 .right .nav_item{
@@ -51,6 +52,13 @@
 .nav_item:hover, .active_nav{
     color: var(--text-color3);
 }
+
+.active_nav_bg{
+    background-color: var(--text-color3);
+    color: white;
+    border-radius: 5px;
+}
+
 
 .nav_item::after{
     content: "";
@@ -68,18 +76,22 @@
     left: 0%
 }
 
-.disabled_nav{
+
+
+.disabled_nav, .disabled_nav:hover{
     cursor: default;
     color: var(--text-color);
 }
 
-.disabled_nav:hover{
-    color: var(--text-color);
-}
 
-.disabled_nav::after{
+.active_nav_bg::after, .disabled_nav::after{
     display: none;
 }
+
+.active_nav_bg:hover{
+    color: white;
+}
+
 
 .dropdown_content{
     display: none;
