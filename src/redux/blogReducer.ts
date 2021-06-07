@@ -3,7 +3,7 @@ import { Blog } from "../local/interface"
 
 const initialState = {
     count: 0,
-    pageSize:10,
+    pageSize: 10,
     currentPage: 1,
     blogs: [
     ],

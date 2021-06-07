@@ -1,43 +1,57 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import style from '../css/paginator.module.css'
 import nav from '../css/navbar.module.css'
 
 interface Props {
-    pageNumber: number,
+    pageCount: number,
     currentPage: number,
     goToPage: (value:string)=>void,
+    portionSize?: number,
 }
 
-export default function Paginator({pageNumber, currentPage, goToPage}: Props): ReactElement {
-    if(pageNumber<2){
+export default function Paginator({pageCount, currentPage, goToPage, portionSize=5}: Props): ReactElement {
+
+
+    const [portionNumber, setPortionNumber] = useState(Math.ceil(currentPage/portionSize));
+
+    let pages:number[] = [];
+    for(let i=1; i<=pageCount; i++){
+        pages.push(i);
+    }
+    
+    let leftPortionPageNumber = (portionNumber-1)*portionSize+1;
+    let rightPortionPageNumber = portionNumber*portionSize;
+
+    if(pageCount<2){
         return <></>
     }
-    console.log(currentPage);
 
     return (
         <div className={style.paginator} >
-            <option disabled={currentPage===1}
-                onClick={(e)=>goToPage(e.currentTarget.value)} 
-                className={`${nav.nav_item} ${currentPage===1 && nav.disabled_nav}`}
+            {portionNumber===1 ||
+            <option
+                onClick={(e)=>setPortionNumber(prn=>prn-1)} 
+                className={`${nav.nav_item}`}
                 value="prev">
                     &#60;&#60;
-            </option>
-            {[2,1,0,-1,-2].map((i)=>(
-                currentPage-i>=1 && currentPage-i<=pageNumber && 
+            </option>}
+            {pages.filter(i=> i>=leftPortionPageNumber && i<=rightPortionPageNumber).map((p)=>(
                 <option
                     onClick={(e)=>goToPage(e.currentTarget.value)}
-                    value={currentPage-i}
-                    className={`${style.page} ${nav.nav_item} ${i===0 && nav.active_nav}`} >
-                        {currentPage-i}
+                    value={p}
+                    className={`${style.page} ${nav.nav_item} ${p===currentPage && nav.active_nav}`} >
+                        {p}
                 </option>
             ))
             }
-            <option disabled={currentPage===pageNumber}
-                onClick={(e)=>goToPage(e.currentTarget.value)}
-                className={`${nav.nav_item} ${currentPage===pageNumber && nav.disabled_nav}`}
+           {portionNumber===Math.ceil(pageCount/portionSize) ||
+           <option
+                onClick={(e)=>setPortionNumber(prn=>prn+1)}
+                className={`${nav.nav_item}`}
                 value="next">
                     &#62;&#62;
             </option>
+            }
         </div>
     )
 }

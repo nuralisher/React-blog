@@ -31,7 +31,7 @@ export default function BlogsContainer(): ReactElement {
         <BlogsWithLoading isLoading={isLoading} blogsList={blogsList} match={match} me={me} forwardRef={ref} />
         <Paginator
             goToPage={goToPage}
-            pageNumber={Math.ceil(blogTotalCount/pageSize)}
+            pageCount={Math.ceil(blogTotalCount/pageSize)}
             currentPage={currentPage} 
         />
         </div>
