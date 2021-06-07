@@ -11,3 +11,29 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root{
+  --main-color: rgba(255, 255, 255);
+  --main-color2: rgb(9, 58, 114);
+  --danger-color: #D73A49;
+  --text-color: #222222;
+  --text-color2: white;
+  --text-color3: rgb(37, 115, 204);
+  --bg-color: #F7F7F7;
+  font-size: 1.1rem;
+}
+
+*,*::before, *::after{
+  box-sizing: border-box;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6{
+  margin: 0;
+}
+
+.container{
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}

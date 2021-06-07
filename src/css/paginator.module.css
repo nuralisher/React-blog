@@ -1,0 +1,11 @@
+.paginator{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 0 2em;
+}
+
+.paginator>option{
+    display: block;
+    margin: 0 .8em;
+}

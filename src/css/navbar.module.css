@@ -1,0 +1,139 @@
+.navbar_outer{
+    position: static;
+    padding: 25px 0;
+}
+
+.navbar{
+    position: fixed;
+    top: 0;
+    background-color: var(--main-color);
+    padding: 1.2em 8em;
+    color: var(--text-color);
+    box-shadow: 0 0 .5em var(--main-color2);
+    width: 100vw;
+}
+
+.navbar_innner{
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.left{
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.right{
+    display: flex;
+    justify-content: right;
+}
+
+.nav_item{
+    color: var(--main-color2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all linear .1s;
+    margin-right: 4em;
+    cursor: pointer;
+    position: relative;
+    text-transform: uppercase;
+    font-size: 17px;
+}
+
+.right .nav_item{
+    margin-right: 0;
+    margin-left: 2em;
+}
+
+.right .dropdown{
+    position: relative;
+}
+
+
+.nav_item:hover, .active_nav{
+    color: var(--text-color3);
+}
+
+.nav_item::after{
+    content: "";
+    height: 2px;
+    width: 0%;
+    background-color: var(--text-color3);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transition: width .2s ease, left .2s ease;
+}
+
+.active_nav::after ,.nav_item:hover::after{
+    width: 100%;
+    left: 0%
+}
+
+.dropdown_content{
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 8em;
+    background-color: var(--main-color);
+    text-align: center;
+    z-index: 10;
+    padding-top: 1em;
+}
+
+
+.dropdown:hover .dropdown_content {
+    display: block;
+}
+
+.dropdown:hover::after{
+    width: 0%;
+}
+
+.username{
+}
+
+.writepost{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.writepost > img{
+    display: block;
+    height: 1rem;
+    margin-left: .5em;
+}
+
+.dropdown_conntent_inner{
+    box-shadow: 0 3px 3px var(--text-color3);
+}
+
+.dropdown_option{
+    display: block;
+    color: var(--main-color2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all linear .1s;
+    cursor: pointer;
+    padding: .5em 0;
+}
+
+
+.dropdown_option:hover{
+    background-color: var(--bg-color);
+    color: var(--text-color3);
+}
+
+.danger_option{
+    color: var(--danger-color);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.danger_option:hover{
+    color: red;
+}
