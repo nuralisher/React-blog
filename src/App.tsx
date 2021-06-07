@@ -12,6 +12,7 @@ import { ActionType } from './local/actionType';
 import Loading from './components/Loading';
 import BlogEdit from './components/BlogEdit';
 import Signup from './components/Signup';
+import style from './css/app.module.css';
 
 function App() {
   const dispatch = useDispatch();
@@ -32,13 +33,14 @@ function App() {
 
   return (
   <>
-
-    <Switch>
-      <Route path='/blogs/:id/edit' render={()=><BlogEdit/> } />
-      <Route path='/blogs/:id' render={()=><BlogDetail/> } />
-      <Route path='/blogs' render={()=><Blogs/> } />
-      <Route path='/blogCreate' render={()=><BlogCreate/>} />
-    </Switch>
+    <div className={style.content} >
+      <Switch>
+        <Route path='/blogs/:id/edit' render={()=><BlogEdit/> } />
+        <Route path='/blogs/:id' render={()=><BlogDetail/> } />
+        <Route path='/blogs' render={()=><Blogs/> } />
+        <Route path='/blogCreate' render={()=><BlogCreate/>} />
+      </Switch>
+    </div>
 
     
     <Switch>

@@ -83,3 +83,8 @@
 .edit_btn>img{
     height: 1em;
 }
+
+.top{
+    position: absolute;
+    top: 0%;
+}

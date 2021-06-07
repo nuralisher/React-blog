@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, match, useRouteMatch } from 'react-router-dom';
 import { getBlogs, getUser } from '../api/api';
@@ -16,36 +16,66 @@ export default function BlogsContainer(): ReactElement {
     const blogsList: Blog[] = useSelector((state: any) => state.blogReducer.blogs);
     const pageSize: number = useSelector((state: any) => state.blogReducer.pageSize);
     const blogTotalCount: number = useSelector((state: any) => state.blogReducer.count);
-    const nextPageUrl: string = useSelector((state: any) => state.blogReducer.next);
-    const prevPageUrl: string = useSelector((state: any) => state.blogReducer.previous);
     const currentPage: number = useSelector((state: any) => state.blogReducer.currentPage);
     let match = useRouteMatch();
     const isLoading:boolean = useSelector((state:any) => state.appReducer.isLoading);
     const me:User = useSelector((state:any) => state.userReducer.currentUser);
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        getBlogs().then(
-            (response)=>{
-                dispatch({type: ActionType.setBlogs, blogs: response.data.results});
-                dispatch({type: ActionType.setBlogsCount, count: response.data.count});
-                dispatch({type: ActionType.setBlogsNext, next: response.data.next});
-                dispatch({type: ActionType.setBlogsPrev, previous: response.data.previous});
-            }
-        ).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false })
-        });
+        loadBlogs(pageSize, currentPage);
     }, [])
 
     return (
         <div className='container' >
-        <BlogsWithLoading isLoading={isLoading} blogsList={blogsList} match={match} me={me} />
+        <BlogsWithLoading isLoading={isLoading} blogsList={blogsList} match={match} me={me} forwardRef={ref} />
         <Paginator
+            goToPage={goToPage}
             pageNumber={Math.ceil(blogTotalCount/pageSize)}
             currentPage={currentPage} 
         />
         </div>
     )
+
+
+    function loadBlogs(limit:number, page:number){
+        dispatch({type: ActionType.setLoading, loadingValue: true });
+        getBlogs(limit, (page-1)*limit ).then(
+            (response)=>{
+                dispatch({type: ActionType.setCurrentBlogsPage, currentPage: page});
+                dispatch({type: ActionType.setBlogs, blogs: response.data.results});
+                dispatch({type: ActionType.setBlogsCount, count: response.data.count});
+                scrollToTop();
+            }
+        ).finally(()=>{
+            dispatch({type: ActionType.setLoading, loadingValue: false })
+        });
+    }
+
+    function goToPage(value:string ){
+        if(currentPage===parseInt(value)){
+            return
+        }
+
+        switch (value){
+            case "next":
+                console.log("next");
+                loadBlogs(pageSize, currentPage+1)
+                break;
+            case "prev":
+                console.log("prev")
+                loadBlogs(pageSize, currentPage-1)
+                break;
+            default:
+                console.log("number")
+                loadBlogs(pageSize , parseInt(value) )
+        }
+    }
+
+
+    function scrollToTop(){
+        ref.current?.scrollIntoView({behavior: "smooth"})
+    }
 }
 
  
@@ -54,15 +84,17 @@ interface Props {
     blogsList: Blog[],
     match: match<{}>,
     me:User,
+    forwardRef: React.RefObject<HTMLDivElement>
 }
 
 
 
-export function Blogs({blogsList, match, me }: Props): ReactElement {
+export function Blogs({blogsList, match, me, forwardRef }: Props): ReactElement {
     return (
         <>
+        <div ref={forwardRef} className={style.top} ></div>
             {
-                blogsList.map((blog)=>
+                blogsList.map((blog, i)=>
                     <div className={style.blog_container} key={blog.id} >
                     <div className={style.author} >{blog.author.pk==me.pk ? "You" :  blog.author?.username}</div>
                         <Link className={style.title} to={`${match.url}/${blog.id}`} > {blog.title} </Link> 
