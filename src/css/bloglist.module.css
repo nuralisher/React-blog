@@ -88,3 +88,13 @@
     position: absolute;
     top: 0%;
 }
+
+.like, .view, .comment{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.like>img, .view>img, .comment>img{
+    margin-right: 5px;
+}

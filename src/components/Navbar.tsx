@@ -17,7 +17,6 @@ export default function Navbar({}: Props): ReactElement {
     const dispatch = useDispatch();
 
     return (
-        <div className={style.navbar_outer}>
         <div className={style.navbar} >
             <div className={style.navbar_innner} >
                 <div className={style.left} >
@@ -57,7 +56,6 @@ export default function Navbar({}: Props): ReactElement {
                     }
                 </div>
             </div>
-        </div>
         </div>
     )
 
