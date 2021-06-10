@@ -3,17 +3,17 @@ import React, { Dispatch, ReactElement, useEffect, useRef, useState } from 'reac
 import { Field, Form } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
-import { getUser, login } from '../api/api';
 import style from '../css/form.module.css'
 import modal from '../css/modal.module.css'
-import withLoading from '../hoc/withLoading';
-import { ActionType } from '../local/actionType';
+import withLoading from '../hoc/withLoading'
+import { auth } from '../redux/userReducer';
 
 export default function LoginContainer(): ReactElement {
     const ref = useRef<HTMLInputElement>(null);
     const [isRedirect, setIsRedirect] = useState(false);
     const dispatch = useDispatch();
     const isLoading:boolean = useSelector((state:any) => state.appReducer.isLoading);
+    const errorMessage:[] = useSelector((state:any)=>state.appReducer.errorMessage);
 
     useEffect(() => {
         ref.current?.focus();
@@ -25,7 +25,13 @@ export default function LoginContainer(): ReactElement {
         )
     }
 
-    return <LoginWithLoading isLoading={isLoading} dispatch={dispatch} redirect={redirect} forwardRef={ref} />
+    return <LoginWithLoading 
+                isLoading={isLoading}
+                dispatch={dispatch}
+                redirect={redirect}
+                forwardRef={ref}
+                errorMessage={errorMessage}
+            />
 
     function redirect(){
         setIsRedirect(true);
@@ -38,9 +44,10 @@ interface Props {
     dispatch: Dispatch<any>,
     redirect: ()=>void,
     forwardRef: React.RefObject<HTMLInputElement>,
+    errorMessage:[],
 }
 
-function Login({dispatch, redirect , forwardRef,}: Props): ReactElement{
+function Login({dispatch, redirect , forwardRef, errorMessage}: Props): ReactElement{
 
     return (
         <div className={modal.background} >
@@ -92,24 +99,9 @@ function Login({dispatch, redirect , forwardRef,}: Props): ReactElement{
     )
 
     async function onLogin(value:any){
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        let error = null;
-
-        await login(value).then((response)=>{
-            localStorage.setItem('key', response.data.key);
-            getUser().then((response)=>{
-                dispatch({type: ActionType.setUser, user: response.data})
-                redirect();
-            })
-        }).catch((e)=>{
-            for(let key in e?.response?.data){
-                console.log(key + " : " + e?.response?.data[key]);
-                error = e?.response?.data[key];
-            }
-        }).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false })
-        });
-
+        let error = "";
+        const setError=(e:any)=>{error=e}
+        await dispatch(auth(value, redirect, setError));
         if(error){
             return {[FORM_ERROR] : error};
         }

@@ -1,3 +1,4 @@
+//django ~userserializer
 export interface User{
     pk: string,
     username: string,
@@ -6,25 +7,30 @@ export interface User{
     last_name: string,
 }
 
-export interface UserProfile{
-    user: User,
-    blogs: Blog[],
-    comments: Comment[],
-}
 
+
+//django PostSerializer
 export interface Blog{
     id: string,
-    title: string,
-    description: string,
-    body: string,
-    likes: number,
-    views: number,
-    comments: Comment[],
-    rating: number,
     author: User,
     author_id: string,
+    title: string,
+    body: string,
+    description: string,
+    comments: Comment[],
+    preferences:BlogPrefernces[],
     created_at: Date,
     updated_at: Date,
+}
+
+export interface BlogPrefernces{
+    id:string,
+    user:User,
+    user_id:string,
+    blog:Blog,
+    blog_id:string,
+    type:string,
+    created_at:Date,
 }
 
 export interface Comment{
@@ -39,6 +45,11 @@ export interface Comment{
 }
 
 
-export const dateConversion = (date : Date) => {
-    return new Date(date).toLocaleString();
+export interface CommentLike{
+    id:string,
+    user:User,
+    user_id:string,
+    comment:Comment,
+    comment_id:string,
+    created_at:Date,
 }

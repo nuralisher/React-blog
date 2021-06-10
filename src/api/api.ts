@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Comment } from "../local/interface";
+import { Comment, User } from "../local/interface";
 
 const instance = Axios.create({
     baseURL: "http://localhost:8000/",
@@ -49,10 +49,8 @@ export const putBlog = (blogId:string ,
     payload: {author_id: string, 
         title: string, 
         description:string,
-        body: string,
-        likes: number, 
-        views: number, 
-        rating: number, })=>{
+        body: string, 
+     })=>{
     return instance.put(`/blogs/${blogId}/`, payload);
 }
 
@@ -62,4 +60,12 @@ export const deleteBlog = (blogId:string)=>{
 
 export const signUp = (cridentials:any)=>{
     return instance.post('/dj_rest_auth/registration/', cridentials);
+}
+
+export const postBlogPreference = (preference:{user_id:string, blog_id:string, type: string  })=>{
+    return instance.post('/blogs/preferences/', preference);
+}
+
+export const deleteBlogPreference = (preference_id:string)=>{
+    return instance.delete(`/blogs/preferences/${preference_id}/`);
 }

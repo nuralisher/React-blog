@@ -1,19 +1,22 @@
-import React, { Dispatch, ReactElement, useRef, useState } from 'react'
+import React, { Dispatch, ReactElement, useEffect, useRef, useState } from 'react'
 import modal from '../css/modal.module.css';
 import form from '../css/form.module.css';
 import { Field, Form } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import withLoading from '../hoc/withLoading';
-import { ActionType } from '../local/actionType';
 import { FORM_ERROR } from 'final-form';
-import { getUser, signUp } from '../api/api';
+import { registrate } from '../redux/userReducer';
 
 export default function SignupContainer(): ReactElement {
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null);
     const [isSigned, setIsSigned] = useState(false);
     const isLoading = useSelector((state:any) => state.appReducer.isLoading);
+
+    useEffect(()=>{
+        ref.current?.focus();
+    },[])
 
     if(isSigned){
         return <Redirect to='/' />
@@ -129,27 +132,12 @@ function Signup({dispatch, redirect , forwardRef,}: Props): ReactElement{
     }
 
     async function onSignUp(value:any){
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        let error:any;
-
-        await signUp(value).then((response)=>{
-            localStorage.setItem('key', response.data.key);
-            getUser().then((response)=>{
-                dispatch({type: ActionType.setUser, user: response.data})
-                redirect();
-            })
-        }).catch((e)=>{
-            error = e?.response?.data;
-        }).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false })
-        })
-
-
-        
-        for(let key in error){
-            return {[FORM_ERROR]: error[key]}
+        let error = "";
+        const setError=(e:any)=>{error=e}
+        await dispatch(registrate(value, redirect, setError)); 
+        if(error){
+            return {[FORM_ERROR] : error};
         }
-
     }
 
 

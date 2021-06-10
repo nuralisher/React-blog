@@ -1,17 +1,12 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom'
-import { getUser, logout } from '../api/api'
+import { NavLink } from 'react-router-dom'
 import style from '../css/navbar.module.css'
-import { ActionType } from '../local/actionType';
 import { User } from '../local/interface';
-import write from '../images/edit.svg';
+import { logOut } from '../redux/userReducer';
 
-interface Props {
-    
-}
 
-export default function Navbar({}: Props): ReactElement {
+export default function Navbar(): ReactElement {
     const isLogged:boolean = useSelector((state:any) => state.userReducer.isLogged);
     const user:User = useSelector((state:any)=> state.userReducer.currentUser);
     const dispatch = useDispatch();
@@ -60,9 +55,6 @@ export default function Navbar({}: Props): ReactElement {
     )
 
     function onLogout(){
-        logout().then((response)=>{
-            dispatch({type: ActionType.logout});
-            localStorage.removeItem('key');
-        })
+        dispatch(logOut());
     }
 }

@@ -3,11 +3,6 @@
     background-color: var(--bg-color);
     padding: 1em;
     border-radius: 1em;
-    transition: transform linear .2s;
-}
-
-.blog_container:hover{
-    transform: scale(103% , 103%);
 }
 
 .title, .flat_title{
@@ -97,4 +92,12 @@
 
 .like>img, .view>img, .comment>img{
     margin-right: 5px;
+}
+
+.like{
+    cursor: pointer;
+}
+
+.liked{
+    color: var(--main-color2)
 }

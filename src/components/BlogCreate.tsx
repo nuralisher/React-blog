@@ -3,13 +3,12 @@ import React, { Dispatch, ReactElement, useEffect, useRef, useState } from 'reac
 import { Field, Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
-import { postBlog } from '../api/api'
 import style from '../css/blogcreate.module.css'
-import { ActionType } from '../local/actionType'
 import { User } from '../local/interface'
 import formStyle from '../css/form.module.css'
 import withLoading from '../hoc/withLoading'
 import withLoginRedirect from '../hoc/withLoginRedirect'
+import { createBlog } from '../redux/blogReducer'
 
 
 export default function BlogCreateContainer(): ReactElement {
@@ -135,22 +134,9 @@ function BlogCreate({dispatch, onCreateBlog, me , initialValues, forwardRef}: Pr
     }
 
     async function submitHandler(values: any){
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        let error; 
-        await postBlog(
-            {author_id: me.pk, 
-            title: values.title.trim(),
-            description: values.description.trim(), 
-            body: values.body.trim(),
-            }
-        ).then((response)=>{
-            onCreateBlog({isCreated: true, id:response.data.id})
-        }).catch((e)=>{
-            error = e.toString();
-        }).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false });
-        })
-
+        let error = "";
+        const setError=(e:any)=>{error=e}
+        await dispatch(createBlog(me, values, onCreateBlog, setError));
         if(error){
             return {[FORM_ERROR] : error};
         }

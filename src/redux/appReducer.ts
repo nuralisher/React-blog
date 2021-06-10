@@ -9,6 +9,7 @@ export const appReducer = (state: any = initialState, action: {
     type: ActionType , 
     initializedValue: Boolean,
     loadingValue: Boolean,
+    errorMessage:[],
     } )=>{
     switch (action.type){
         case ActionType.setInitialized:

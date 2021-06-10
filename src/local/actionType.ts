@@ -7,4 +7,6 @@ export enum ActionType {
     logout,
     setLoading,
     setInitialized,
+    likeBlog,
+    removeLikeBlog,
 }

@@ -3,15 +3,13 @@ import React, { Dispatch, ReactElement, useEffect, useRef, useState } from 'reac
 import { Field, Form } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useRouteMatch } from 'react-router-dom';
-import { deleteBlog, getBlog, putBlog } from '../api/api';
 import style from '../css/blogcreate.module.css';
 import formStyle from '../css/form.module.css';
 import withLoading from '../hoc/withLoading';
 import withLoginRedirect from '../hoc/withLoginRedirect';
-import { ActionType } from '../local/actionType';
 import { Blog, User } from '../local/interface';
+import { loadBlog, removeBlog, updateBlog } from '../redux/blogReducer';
 import BlogDelete from './BlogDelete';
-import { Blogs } from './Blogs';
 import DeletedBlog from './DeletedBlog';
 
 export default function BlogEditContainer(): ReactElement {
@@ -28,16 +26,7 @@ export default function BlogEditContainer(): ReactElement {
     const [isDeleted, setIsDeleted] = useState(false);
 
     useEffect(()=>{
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        setIsSaved(false);
-        getBlog(match.params.id).then((response)=>{
-            dispatch({type: ActionType.setSelectedBlog, selectedBlog: response.data});
-        }).catch((e)=>{
-            console.error(e);
-        }).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false });
-            autoResize();
-        });
+        dispatch(loadBlog(match.params.id, me, autoResize));
     }, [])
 
     if(isSaved){
@@ -92,14 +81,15 @@ export default function BlogEditContainer(): ReactElement {
 
     async function onDelete(){
         setShowModal(false);
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        await deleteBlog(blog.id).then(()=>{
-            setIsDeleted(true);
-        }).catch((e)=>{
-            console.log(e);
-        }).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false });
-        })
+        let error = "";
+        const setError=(e:any)=>{error=e}
+        await dispatch(removeBlog(setDeleted, blog.id, setError));
+        error && console.log(error);
+        
+    }
+
+    function setDeleted(){
+        setIsDeleted(true);
     }
 }
 
@@ -204,25 +194,9 @@ function BlogEdit({dispatch, onSaveBlog, me, blog, autoResize, forwardRef, descr
     )
 
     async function submitHandler(values: any){
-        dispatch({type: ActionType.setLoading, loadingValue: true });
-        let error; 
-        await putBlog(blog.id , 
-            {author_id: me.pk, 
-            title: values.title.trim(), 
-            description: values.description.trim() , 
-            body: values.body.trim(),
-            likes: blog.likes,
-            views: blog.views,
-            rating: blog.rating,
-        }
-        ).then((response)=>{
-            onSaveBlog(true)
-        }).catch((e)=>{
-            error = e.toString();
-        }).finally(()=>{
-            dispatch({type: ActionType.setLoading, loadingValue: false });
-        })
-
+        let error = "";
+        const setError=(e:any)=>{error=e}
+        await dispatch(updateBlog(blog, me, values, onSaveBlog, setError));
         if(error){
             return {[FORM_ERROR] : error};
         }
