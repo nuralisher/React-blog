@@ -16,8 +16,8 @@ instance.interceptors.request.use(
     (e)=>{}
 )
 
-export const getBlogs = (limit: number , offset:number, search="")=>{
-    return instance.get(`/blogs/?limit=${limit}&offset=${offset}&search=${search}`);
+export const getBlogs = (limit: number , offset:number, orderBy="" ,search="")=>{
+    return instance.get(`/blogs/?limit=${limit}&offset=${offset}&ordering=${orderBy}&search=${search}`);
 }
 
 export const getBlog = (id: string)=>{

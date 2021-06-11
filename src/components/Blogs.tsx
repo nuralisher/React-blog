@@ -20,6 +20,7 @@ export default function BlogsContainer(): ReactElement {
     const pageSize: number = useSelector((state: any) => state.blogReducer.pageSize);
     const blogTotalCount: number = useSelector((state: any) => state.blogReducer.count);
     const searchText: string = useSelector((state: any) => state.blogReducer.searchText);
+    const orderByValue: string = useSelector((state: any) => state.blogReducer.orderBy);
     const currentPage: number = useSelector((state: any) => state.blogReducer.currentPage);
     let match = useRouteMatch();
     const isLoading:boolean = useSelector((state:any) => state.appReducer.isLoading);
@@ -33,7 +34,7 @@ export default function BlogsContainer(): ReactElement {
 
     return (
         <div className='container' >
-            <BlogFilter searchText={searchText} onSearch={onSearch} />
+            <BlogFilter orderByValue={orderByValue} orderBy={orderBy} searchText={searchText} onSearch={onSearch} />
             {searchText && 
                 <div className={style.search_result_box}>
                     <span className={style.search_result}>Search resuls for {searchText}</span>
@@ -56,18 +57,23 @@ export default function BlogsContainer(): ReactElement {
 
 
     async function onSearch(values:{search:string}){
-        await dispatch(loadBlogs(pageSize, 1, me, values.search));
+        await dispatch(loadBlogs(pageSize, 1, me, orderByValue, values.search));
     }
 
     function clearSearch(){
         dispatch(loadBlogs(pageSize, 1, me));
     }
 
+    function orderBy(value:string){
+        console.log(value);
+        dispatch(loadBlogs(pageSize, currentPage, me, value, searchText))
+    }
+
     async function goToPage(value:string ){
         if(currentPage===parseInt(value)){
             return
         }
-        await dispatch(loadBlogs(pageSize , parseInt(value), me,  searchText, scrollToTop))
+        await dispatch(loadBlogs(pageSize , parseInt(value), me,  orderByValue, searchText, scrollToTop))
     }
 
 

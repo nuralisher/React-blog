@@ -8,6 +8,7 @@ const initialState = {
     pageSize: 10,
     currentPage: 1,
     searchText: "",
+    orderBy: "",
     blogs: [],
     selectedBlog: {id: null},
 }
@@ -21,6 +22,7 @@ export const blogReducer = (state: any = initialState, action: {
     currentPage:number,
     likedBlog:Blog,
     blogPreference:BlogPrefernces,
+    orderBy:string,
     } )=>{
     switch (action.type){
         case ActionType.setBlogs:
@@ -33,6 +35,8 @@ export const blogReducer = (state: any = initialState, action: {
             return {...state, selectedBlog:{...action.selectedBlog} }
         case ActionType.setSearchText:
             return {...state, searchText: action.searchText}
+        case ActionType.setOrderBy:
+            return {...state, orderBy: action.orderBy}
         case ActionType.likeBlog:
             return {...state,
                 blogs: updateObjectInArray(state.blogs, action.likedBlog.id, "id",
@@ -47,15 +51,16 @@ export const blogReducer = (state: any = initialState, action: {
 }
 
 
-export const loadBlogs = (limit:number, page:number, me:User, search?:string, onSuccess?:()=>void, onCatch?:(e:any)=>void)=>{
+export const loadBlogs = (limit:number, page:number, me:User, orderBy?:string ,search?:string, onSuccess?:()=>void, onCatch?:(e:any)=>void)=>{
     return async (dispatch: any)=>{
         dispatch({type: ActionType.setLoading, loadingValue: true });
-        await getBlogs(limit, (page-1)*limit, search).then(
+        await getBlogs(limit, (page-1)*limit, orderBy, search).then(
             (response)=>{
                 dispatch({type: ActionType.setBlogs, blogs: response.data.results});
                 dispatch({type: ActionType.setCurrentBlogsPage, currentPage: page});
                 dispatch({type: ActionType.setBlogsCount, count: response.data.count});
                 dispatch({type: ActionType.setSearchText, searchText: search});
+                dispatch({type: ActionType.setOrderBy, orderBy});
                 onSuccess && onSuccess()
             }
         ).catch((e)=>{

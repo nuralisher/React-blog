@@ -4,6 +4,7 @@ export enum ActionType {
     setBlogsCount,
     setCurrentBlogsPage,
     setSearchText,
+    setOrderBy,
     setUser,
     logout,
     setLoading,
