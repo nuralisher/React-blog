@@ -7,6 +7,7 @@ const initialState = {
     count: 0,
     pageSize: 10,
     currentPage: 1,
+    searchText: "",
     blogs: [],
     selectedBlog: {id: null},
 }
@@ -14,6 +15,7 @@ const initialState = {
 export const blogReducer = (state: any = initialState, action: {
     type: ActionType , 
     blogs: Blog[], 
+    searchText: string,
     selectedBlog: Blog,
     count: number,
     currentPage:number,
@@ -29,6 +31,8 @@ export const blogReducer = (state: any = initialState, action: {
             return {...state, currentPage: action.currentPage}
         case ActionType.setSelectedBlog:
             return {...state, selectedBlog:{...action.selectedBlog} }
+        case ActionType.setSearchText:
+            return {...state, searchText: action.searchText}
         case ActionType.likeBlog:
             return {...state,
                 blogs: updateObjectInArray(state.blogs, action.likedBlog.id, "id",
@@ -43,15 +47,16 @@ export const blogReducer = (state: any = initialState, action: {
 }
 
 
-export const loadBlogs = (limit:number, page:number, scrollToTop:()=>void, me:User, onCatch?:(e:any)=>void)=>{
+export const loadBlogs = (limit:number, page:number, me:User, search?:string, onSuccess?:()=>void, onCatch?:(e:any)=>void)=>{
     return async (dispatch: any)=>{
         dispatch({type: ActionType.setLoading, loadingValue: true });
-        await getBlogs(limit, (page-1)*limit ).then(
+        await getBlogs(limit, (page-1)*limit, search).then(
             (response)=>{
                 dispatch({type: ActionType.setBlogs, blogs: response.data.results});
                 dispatch({type: ActionType.setCurrentBlogsPage, currentPage: page});
                 dispatch({type: ActionType.setBlogsCount, count: response.data.count});
-                scrollToTop()
+                dispatch({type: ActionType.setSearchText, searchText: search});
+                onSuccess && onSuccess()
             }
         ).catch((e)=>{
             handleError(e, onCatch);

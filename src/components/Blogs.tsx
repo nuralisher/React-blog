@@ -1,8 +1,9 @@
-import React, { ReactElement, useEffect, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, match, useRouteMatch } from 'react-router-dom';
+import { Link, match, Redirect, useRouteMatch } from 'react-router-dom';
 import { Blog, User } from '../local/interface';
 import style from '../css/bloglist.module.css';
+import form from '../css/form.module.css';
 import like from '../images/like.svg';
 import liked from '../images/liked.svg';
 import view from '../images/view.svg';
@@ -11,12 +12,14 @@ import withLoading from '../hoc/withLoading';
 import Paginator from './Paginator';
 import { likeBlog, loadBlogs, removeLikeBlog } from '../redux/blogReducer';
 import { dateConversion, amILikedBlog } from '../local/utils';
+import BlogFilter from './BlogFilter';
 
 export default function BlogsContainer(): ReactElement {
     const dispatch = useDispatch();
     const blogsList: Blog[] = useSelector((state: any) => state.blogReducer.blogs);
     const pageSize: number = useSelector((state: any) => state.blogReducer.pageSize);
     const blogTotalCount: number = useSelector((state: any) => state.blogReducer.count);
+    const searchText: string = useSelector((state: any) => state.blogReducer.searchText);
     const currentPage: number = useSelector((state: any) => state.blogReducer.currentPage);
     let match = useRouteMatch();
     const isLoading:boolean = useSelector((state:any) => state.appReducer.isLoading);
@@ -24,31 +27,47 @@ export default function BlogsContainer(): ReactElement {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        dispatch(loadBlogs(pageSize, currentPage, scrollToTop, me));
+        dispatch(loadBlogs(pageSize, currentPage, me));
     }, [])
+
 
     return (
         <div className='container' >
-        <BlogsWithLoading 
-            isLoading={isLoading}
-            blogsList={blogsList}
-            match={match} me={me}
-            forwardRef={ref}
-            onLikeClick={onLikeClick}
-        />
-        <Paginator
-            goToPage={goToPage}
-            pageCount={Math.ceil(blogTotalCount/pageSize)}
-            currentPage={currentPage} 
-        />
+            <BlogFilter searchText={searchText} onSearch={onSearch} />
+            {searchText && 
+                <div className={style.search_result_box}>
+                    <span className={style.search_result}>Search resuls for {searchText}</span>
+                    <span onClick={clearSearch} className={`${form.link} ${form.link_danger}`} >Click to clear search</span>
+                </div> }
+            <BlogsWithLoading 
+                isLoading={isLoading}
+                blogsList={blogsList}
+                match={match} me={me}
+                forwardRef={ref}
+                onLikeClick={onLikeClick}
+            />
+            <Paginator
+                goToPage={goToPage}
+                pageCount={Math.ceil(blogTotalCount/pageSize)}
+                currentPage={currentPage} 
+            />
         </div>
     )
+
+
+    async function onSearch(values:{search:string}){
+        await dispatch(loadBlogs(pageSize, 1, me, values.search));
+    }
+
+    function clearSearch(){
+        dispatch(loadBlogs(pageSize, 1, me));
+    }
 
     async function goToPage(value:string ){
         if(currentPage===parseInt(value)){
             return
         }
-        await dispatch(loadBlogs(pageSize , parseInt(value), scrollToTop, me))
+        await dispatch(loadBlogs(pageSize , parseInt(value), me,  searchText, scrollToTop))
     }
 
 

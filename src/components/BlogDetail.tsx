@@ -26,7 +26,6 @@ export default function BlogDetailContainer(): ReactElement {
     }, [])
 
     useEffect(() => {
-        console.log(blog)
     }, [blog])
 
     return <BlogDetailWithLoading isLoading={isLoading} blog={blog} me={me} match={match} />

@@ -82,6 +82,13 @@
     width: 10em;
 }
 
+.btn_tiny{
+    width: auto;
+    padding: 0 .2em;
+    font-size: .8rem;
+    font-weight: 400;
+}
+
 .btn_danger{
     background-color: white;
     color: var(--danger-color);
@@ -117,4 +124,77 @@
 .btn_white:hover{
     color: white;
     background-color: var(--main-color);
+}
+
+.link{
+    cursor: pointer;
+    font-size: .8em;
+    font-weight: 400;
+}
+
+.link:hover{
+    text-decoration: underline;
+}
+
+.link_danger{
+    color: var(--danger-color);
+}
+
+.searchForm{
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchForm>*{
+    display: block;
+}
+
+.search_input_box{
+    border: 1px solid var(--main-color2);
+    border: 0;
+    position: relative;
+}
+
+.search_input_box>button{
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    background-color: white;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+
+.search_input{
+    width: 100%;
+    height: 100%;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    box-shadow: 0 0 .2em rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 0 .5em;
+    transition: all linear .2s;
+}
+
+.search_input:focus{
+    box-shadow: 0 0 .3em var(--text-color3);
+    width: 20em;
+}
+
+.order_btn{
+    border: 1px solid var(--main-color2);
+    border: 0;
+    border-radius: 5px;
+    outline: 0;
+    padding: 0 .5em;
+    background-color: var(--bg-color);
+    box-shadow: 0 0 .2em rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.dropdown{
+    display: block;
 }
