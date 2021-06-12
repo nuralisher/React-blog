@@ -5,11 +5,10 @@ import { Blog, User } from '../local/interface';
 import style from '../css/bloglist.module.css';
 import like from '../images/like.svg';
 import liked from '../images/liked.svg';
-import view from '../images/view.svg';
 import edit_icon from '../images/pencil.svg';
 import { Link } from 'react-router-dom';
 import withLoading from '../hoc/withLoading';
-import { loadBlog } from '../redux/blogReducer';
+import { likeBlog, loadBlog, removeLikeBlog } from '../redux/blogReducer';
 import { amILikedBlog, dateConversion } from '../local/utils';
 import Comments from './Comments';
 
@@ -25,15 +24,21 @@ export default function BlogDetailContainer(): ReactElement {
         dispatch(loadBlog(match.params.id, me));
     }, [])
 
-    useEffect(() => {
-    }, [blog])
-
     return (
     <div className='container' >
-        <BlogDetailWithLoading isLoading={isLoading} blog={blog} me={me} match={match} />
+        <BlogDetailWithLoading onLikeClick={onLikeClick} isLoading={isLoading} blog={blog} me={me} match={match} />
         <Comments/>
     </div>
     )
+
+    async function onLikeClick(blo:Blog, ){
+        if(!amILikedBlog(blog, me)){
+            await dispatch(likeBlog(blog, me.pk));
+        }else{
+            const preference = blog.preferences.find(p=>p.user.pk===me.pk && p.type==="like");
+            preference && await dispatch(removeLikeBlog(blog, preference));
+        }
+    }
 }
 
 const BlogDetailWithLoading = withLoading(BlogDetail);
@@ -42,10 +47,11 @@ const BlogDetailWithLoading = withLoading(BlogDetail);
 interface Props {
     blog: Blog,
     me: User,
-    match: match<{id: string}>
+    match: match<{id: string}>,
+    onLikeClick:(blog:Blog,)=>void,
 }
 
-function BlogDetail({blog, me, match}: Props): ReactElement{
+function BlogDetail({blog, me, match, onLikeClick ,}: Props): ReactElement{
     if (blog.id) {
         return (
             <>
@@ -67,19 +73,14 @@ function BlogDetail({blog, me, match}: Props): ReactElement{
                         {blog.body}
                     </pre>                
                     <div className={style.container_footer} >
-                        <div 
-                            className={`${style.like} ${amILikedBlog(blog, me) && style.liked}`} >
-                                {amILikedBlog(blog, me) ? 
-                                <img src={liked} alt="liked" width="20px" />
-                                :
-                                <img src={like} alt="like" width="20px" />
-                                }
-                                <div className={style.like_count}> {blog.preferences.filter(p=>p.type==='like').length} </div>
-                            </div>
-                        <div className={style.view} >
-                            <img src={view} alt="view" width="20px" />
-                            <div className={style.view_count}> {blog.preferences.filter(p=>p.type==='view').length} </div>
+                        <div  onClick={(e)=>onLikeClick(blog)} className={style.like_icon}>
+                            {amILikedBlog(blog, me) ? 
+                            <img src={liked} alt="liked" width="20px" />
+                            :
+                            <img src={like} alt="like" width="20px" />
+                            }
                         </div>
+                        <div className={style.like_count}> {blog.preferences.filter(p=>p.type==='like').length} </div>
                     </div>
                 </div>
             </>

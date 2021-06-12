@@ -69,3 +69,15 @@ export const postBlogPreference = (preference:{user_id:string, blog_id:string, t
 export const deleteBlogPreference = (preference_id:string)=>{
     return instance.delete(`/blogs/preferences/${preference_id}/`);
 }
+
+export const postComment = (comment: {author_id: string, blog_id: string, body: string})=>{
+    return instance.post('/comments/', comment);
+}
+
+export const postCommentLike = (like: {user_id: string , comment_id: string})=>{
+    return instance.post('/comments/likes/', like);
+}
+
+export const deleteCommentLike = (like_id: string)=>{
+    return instance.delete(`/comments/likes/${like_id}/`);
+}

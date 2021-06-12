@@ -11,4 +11,6 @@ export enum ActionType {
     setInitialized,
     likeBlog,
     removeLikeBlog,
+    likeComment,
+    removeLikeComment,
 }

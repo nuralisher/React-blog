@@ -91,12 +91,19 @@
     align-items: center;
 }
 
-.like>img, .view>img, .comment>img{
+.like_icon, .comment_icon{
     margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.like_icon>img, .comment_icon>img{
+    display: block;
 }
 
 .like{
-    cursor: pointer;
 }
 
 .liked{

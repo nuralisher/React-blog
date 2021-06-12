@@ -81,17 +81,13 @@ export default function BlogsContainer(): ReactElement {
         ref.current?.scrollIntoView({behavior: "smooth"})
     }
 
-    async function onLikeClick(blog:Blog, target: EventTarget, ){
-        console.log(target);
+    async function onLikeClick(blog:Blog, ){
         if(!amILikedBlog(blog, me)){
-            console.log("like");
             await dispatch(likeBlog(blog, me.pk));
         }else{
-            console.log("remove like");
             const preference = blog.preferences.find(p=>p.user.pk===me.pk && p.type==="like");
             preference && await dispatch(removeLikeBlog(blog, preference));
         }
-
     }
 }
 
@@ -102,7 +98,7 @@ interface Props {
     match: match<{}>,
     me:User,
     forwardRef: React.RefObject<HTMLDivElement>,
-    onLikeClick:(blog:Blog, target: EventTarget)=>void,
+    onLikeClick:(blog:Blog,)=>void,
 }
 
 
@@ -125,21 +121,20 @@ export function Blogs({blogsList, match, me, forwardRef, onLikeClick ,}: Props):
                             {blog.description}
                         </div>
                         <div className={style.container_footer} >
-                            <div onClick={(e)=>onLikeClick(blog, e.target )}
-                            className={`${style.like} ${amILikedBlog(blog, me) && style.liked}`} >
-                                {amILikedBlog(blog, me) ? 
-                                <img src={liked} alt="liked" width="20px" />
-                                :
-                                <img src={like} alt="like" width="20px" />
-                                }
+                            <div className={`${style.like} ${amILikedBlog(blog, me) && style.liked}`} >
+                                <div  onClick={(e)=>onLikeClick(blog)} className={style.like_icon}>
+                                    {amILikedBlog(blog, me) ? 
+                                    <img src={liked} alt="liked" width="20px" />
+                                    :
+                                    <img src={like} alt="like" width="20px" />
+                                    }
+                                </div>
                                 <div className={style.like_count}> {blog.preferences.filter(p=>p.type==='like').length} </div>
                             </div>
-                            <div className={style.view} >
-                                <img src={view} alt="view" width="20px" />
-                                <div className={style.view_count}> {blog.preferences.filter(p=>p.type==='view').length} </div>
-                            </div>
                             <div className={style.comment} >
-                                <img src={comment} alt="comment" width="20px" />
+                                <div className={style.comment_icon}>
+                                    <img src={comment} alt="comment" width="20px" />
+                                </div>
                                 <div className={style.comment_count}> {blog.comments.length} </div>
                             </div>
                         </div>

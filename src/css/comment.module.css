@@ -54,17 +54,27 @@
 
 .comment_footer{
     display: flex;
+    justify-content: start;
+}
+
+.like{
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-.comment_footer>*{
+.like_icon, .comment_icon{
+    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.like_icon>img, .comment_icon>img{
     display: block;
 }
 
-.like_count{
-    margin-left: .5em;
-}
-
-.no_comment{
-    margin: 1em 0 0;
+.liked{
+    color: var(--main-color2)
 }
