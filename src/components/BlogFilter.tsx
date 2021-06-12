@@ -48,12 +48,12 @@ export default function BlogFilter({ searchText, onSearch, orderBy, orderByValue
                             </button>
                             {showDrop &&
                             <div onClick={(e)=>{e.stopPropagation()}} className={form.dropdown} >
-                                <div onClick={()=>{orderByValue==="-created_at"? orderBy("") : orderBy("-created_at")}}
+                                <div onClick={()=>{setShowDrop(false); orderByValue==="-created_at"? orderBy("") : orderBy("-created_at")}}
                                     className={`${form.dropdown_option} ${orderByValue==="-created_at" && form.option_active}`} >
                                     <div>New first</div>
                                     {orderByValue==='-created_at' && <img src={selectedIcon} width="13px" ></img> }
                                 </div>
-                                <div onClick={()=>{orderByValue==="created_at"? orderBy("") : orderBy("created_at")}}
+                                <div onClick={()=>{setShowDrop(false); orderByValue==="created_at"? orderBy("") : orderBy("created_at")}}
                                     className={`${form.dropdown_option} ${orderByValue==="created_at" && form.option_active}`} >
                                     <div>Old first</div>
                                     {orderByValue==='created_at' && <img src={selectedIcon} width="13px" ></img> }

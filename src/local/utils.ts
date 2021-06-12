@@ -1,4 +1,4 @@
-import { Blog, User } from "./interface";
+import { Blog, User, Comment } from "./interface";
 
 export const updateObjectInArray = (items: any, itemId: any, objPropName: any, newObjProps: any) => {
     return items.map((item: any) => {
@@ -30,6 +30,17 @@ export const amILikedBlog = (blog: Blog, me: User)=>{
         }
     })
     return isLiked;
+}
+
+export const amILikedComment = (comment:Comment, me:User)=>{
+    let isLiked = false;
+    comment.likes.map((cl)=>{
+        if(cl.user.pk===me.pk){
+            isLiked = true;
+            return
+        }
+    })
+    return isLiked
 }
 
 export const amIViewdBlog = (blog: Blog, me: User)=>{

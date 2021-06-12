@@ -39,7 +39,7 @@ export interface Comment{
     author_id: number,
     blog_id: number,
     body: string,
-    likes: number,
+    likes: CommentLike[],
     created_at: Date,
     updated_at: Date,
 }

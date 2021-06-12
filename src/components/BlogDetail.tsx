@@ -6,12 +6,12 @@ import style from '../css/bloglist.module.css';
 import like from '../images/like.svg';
 import liked from '../images/liked.svg';
 import view from '../images/view.svg';
-import comment from '../images/comment.svg';
 import edit_icon from '../images/pencil.svg';
 import { Link } from 'react-router-dom';
 import withLoading from '../hoc/withLoading';
 import { loadBlog } from '../redux/blogReducer';
 import { amILikedBlog, dateConversion } from '../local/utils';
+import Comments from './Comments';
 
 
 export default function BlogDetailContainer(): ReactElement {
@@ -28,7 +28,12 @@ export default function BlogDetailContainer(): ReactElement {
     useEffect(() => {
     }, [blog])
 
-    return <BlogDetailWithLoading isLoading={isLoading} blog={blog} me={me} match={match} />
+    return (
+    <div className='container' >
+        <BlogDetailWithLoading isLoading={isLoading} blog={blog} me={me} match={match} />
+        <Comments/>
+    </div>
+    )
 }
 
 const BlogDetailWithLoading = withLoading(BlogDetail);
@@ -43,13 +48,13 @@ interface Props {
 function BlogDetail({blog, me, match}: Props): ReactElement{
     if (blog.id) {
         return (
-            <div className='container' >
+            <>
                 <div className={style.blog_container}>
                     <div className={style.author} >{blog.author.pk===me.pk ? "You" :  "Alisher Nurzhanuly"}</div>
                     <div className={style.flat_title}>
                         <div>{blog.title}</div> 
                         {blog.author.pk===me.pk && <Link to={`${match.url}/edit`} className={style.edit_btn} >Edit <img src={edit_icon} alt="edit" /> </Link> } 
-                    </div> 
+                    </div>
                     <div className={style.date} >
                         {dateConversion(blog.created_at)} 
                         {blog.created_at != blog.updated_at && 
@@ -75,13 +80,9 @@ function BlogDetail({blog, me, match}: Props): ReactElement{
                             <img src={view} alt="view" width="20px" />
                             <div className={style.view_count}> {blog.preferences.filter(p=>p.type==='view').length} </div>
                         </div>
-                        <div className={style.comment} >
-                            <img src={comment} alt="comment" width="20px" />
-                            <div className={style.comment_count}> {blog.comments.length} </div>
-                        </div>
                     </div>
                 </div>
-            </div>
+            </>
         )
     }else{
         return (
